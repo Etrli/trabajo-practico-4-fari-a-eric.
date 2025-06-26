@@ -1,5 +1,4 @@
 
-import { where } from "sequelize";
 import Character from "../modules/user.modules.js";
 
 export const createCharacter = async (req, res) => {
