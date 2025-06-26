@@ -1,9 +1,9 @@
 
+import { where } from "sequelize";
 import Character from "../modules/user.modules.js";
 
 export const createCharacter = async (req, res) => {
   const { name, ki, race, gender, description } = req.body;
-
   if (req.body) {
     for (let value in req.body) {
       if (typeof req.body[value] === "string") {
@@ -31,7 +31,7 @@ export const createCharacter = async (req, res) => {
       return res.status(400).json({ Message: "No esta definida la Raza y que ingresar un valor" });
     }
 
-    if (typeof description !== "string") {
+    if (typeof description === "Number") {
      return res.status(400).json({ Message: "La descripcion tiene que ser un tipo STRING" });
     }
 
@@ -87,10 +87,7 @@ export const obtenerPersonajes = async (req, res) => {
   try {
     const personajes = await Character.findAll();
 
-    if (personajes.length === 0)
-      return res
-        .status(400)
-        .json({ Message: "No se encontró Ningun personaje" });
+    if (personajes.length === 0) return res.status(400).json({ Message: "No se encontró Ningun personaje" });
 
     return res.json(personajes);
   } catch (error) {
@@ -101,25 +98,24 @@ export const obtenerPersonajes = async (req, res) => {
 
 export const obtenerPorID = async (req, res) => {
   try {
-    const personaje = Character.findByPk(req.params.id);
-    if (personaje) return res.status(201).json(personaje);
-
-    return res.status(404).json({ message: "No se Encontró la ID" });
+    const {id} = req.params;
+    const personaje = await Character.findByPk(id);
+    if (personaje)
+       return res.status(201).json(personaje) ({message: "Se encontró el personaje"})
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: "Error Por parte del Servidor" });
   }
 };
 
 export const eliminarPersonaje = async (req, res) => {
   try {
-    const personaje = Character.destroy(req.params.id);
+    const personaje = await Character.destroy({where: {id: req.params.id}});
+  
     if (personaje)
-      return res
-        .status(400)
-        .json({ message: "no se ha podido eliminar el personaje" });
+      return res.status(201).json({ message: "Se se ha podido eliminar el personaje" });
 
-    return res.status(201).json({ message: "Se Ha eliminado el personaje" });
+    return res.status(201).json({ message: "No se ha eliminado el personaje" });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ Message: "Error de parte del Servidor al eliminar" });
   }
 };
