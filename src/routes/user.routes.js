@@ -5,10 +5,10 @@ import { createCharacter, eliminarPersonaje, obtenerPersonajes, obtenerPorID, up
 const routes = express.Router();
 
 
-routes.get("/get",obtenerPersonajes);
-routes.get("/get/:id",obtenerPorID)
-routes.post("/create",createCharacter);
-routes.delete("/destroy/:id",eliminarPersonaje);
-routes.put("/update/:id",updateCharacter);
+routes.get("/api/get",obtenerPersonajes);
+routes.get("/api/get/:id",obtenerPorID)
+routes.post("/api/create",createCharacter);
+routes.delete("/api/destroy/:id",eliminarPersonaje);
+routes.put("/api/update/:id",updateCharacter);
 
 export default routes
